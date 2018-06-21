@@ -58,21 +58,38 @@ public interface PetRepository {
      * @see BaseEntity#isNew
      */
     void save(Pet pet) throws DataAccessException;
-    
+
     /**
-     * Retrieve <code>Pet</code>s from the data store, returning all owners 
+     * Retrieve <code>Pet</code>s from the data store, returning all owners
      *
      * @return a <code>Collection</code> of <code>Pet</code>s (or an empty <code>Collection</code> if none
      * found)
      */
-	Collection<Pet> findAll() throws DataAccessException;
+    Collection<Pet> findAll() throws DataAccessException;
 
     /**
      * Delete an <code>Pet</code> to the data store by <code>Pet</code>.
      *
      * @param pet the <code>Pet</code> to delete
-     * 
      */
-	void delete(Pet pet) throws DataAccessException;
+    void delete(Pet pet) throws DataAccessException;
+
+    /**
+     * Retrieve <code>Pet</code>s from the data store, returning all pets for requested owner
+     *
+     * @param ownerId the ownerId to search for
+     * @return list list of pets
+     * @throws DataAccessException
+     */
+    Collection<Pet> findAllPetsByOwnerId(Integer ownerId) throws DataAccessException;
+
+    /**
+     * Retrieve <code>Pet</code>s from the data store, returning all pets for requested vet
+     *
+     * @param vetId the vetId to search for
+     * @return list list of pets
+     * @throws DataAccessException
+     */
+    Collection<Pet> findAllPetsByVet(Integer vetId) throws DataAccessException;
 
 }

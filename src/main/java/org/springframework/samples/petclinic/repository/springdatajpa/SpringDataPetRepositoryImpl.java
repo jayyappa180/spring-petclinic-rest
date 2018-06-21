@@ -20,24 +20,33 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
 import org.springframework.context.annotation.Profile;
+import org.springframework.dao.DataAccessException;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.samples.petclinic.model.Pet;
+
+import java.util.Collection;
 
 /**
  * @author Vitaliy Fedoriv
- *
  */
 
 @Profile("spring-data-jpa")
 public class SpringDataPetRepositoryImpl implements PetRepositoryOverride {
-	
-	@PersistenceContext
+
+    @PersistenceContext
     private EntityManager em;
 
-	@Override
-	public void delete(Pet pet) {
-		String petId = pet.getId().toString();
-		this.em.createQuery("DELETE FROM Visit visit WHERE pet_id=" + petId).executeUpdate();
-		this.em.createQuery("DELETE FROM Pet pet WHERE id=" + petId).executeUpdate();
-	}
+    @Override
+    public void delete(Pet pet) {
+        String petId = pet.getId().toString();
+        this.em.createQuery("DELETE FROM Visit visit WHERE pet_id=" + petId).executeUpdate();
+        this.em.createQuery("DELETE FROM Pet pet WHERE id=" + petId).executeUpdate();
+    }
+
+    @Override
+    public Collection<Pet> findAllPetsByVet(Integer vetId) throws DataAccessException {
+        return this.em.createQuery("SELECT pet FROM Visit visit JOIN visit.pet pet WHERE vet_id =" + vetId).getResultList();
+    }
 
 }

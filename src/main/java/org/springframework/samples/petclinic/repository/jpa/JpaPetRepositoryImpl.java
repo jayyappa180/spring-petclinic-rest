@@ -63,22 +63,32 @@ public class JpaPetRepositoryImpl implements PetRepository {
             this.em.merge(pet);
         }
     }
-    
-	@SuppressWarnings("unchecked")
-	@Override
-	public Collection<Pet> findAll() throws DataAccessException {
-		return this.em.createQuery("SELECT pet FROM Pet pet").getResultList();
-	}
 
-	@Override
-	public void delete(Pet pet) throws DataAccessException {
-		//this.em.remove(this.em.contains(pet) ? pet : this.em.merge(pet));
-		String petId = pet.getId().toString();
-		this.em.createQuery("DELETE FROM Visit visit WHERE pet_id=" + petId).executeUpdate();
-		this.em.createQuery("DELETE FROM Pet pet WHERE id=" + petId).executeUpdate();
-		if (em.contains(pet)) {
-			em.remove(pet);
-		}
-	}
+    @SuppressWarnings("unchecked")
+    @Override
+    public Collection<Pet> findAll() throws DataAccessException {
+        return this.em.createQuery("SELECT pet FROM Pet pet").getResultList();
+    }
+
+    @Override
+    public void delete(Pet pet) throws DataAccessException {
+        //this.em.remove(this.em.contains(pet) ? pet : this.em.merge(pet));
+        String petId = pet.getId().toString();
+        this.em.createQuery("DELETE FROM Visit visit WHERE pet_id=" + petId).executeUpdate();
+        this.em.createQuery("DELETE FROM Pet pet WHERE id=" + petId).executeUpdate();
+        if (em.contains(pet)) {
+            em.remove(pet);
+        }
+    }
+
+    @Override
+    public Collection<Pet> findAllPetsByOwnerId(Integer ownerId) throws DataAccessException {
+        return this.em.createQuery("SELECT pet FROM Pet pet WHERE owner_id=" + ownerId).getResultList();
+    }
+
+    @Override
+    public Collection<Pet> findAllPetsByVet(Integer vetId) throws DataAccessException {
+        return this.em.createQuery("SELECT pet FROM Visit visit JOIN visit.pet pet WHERE vet_id =" + vetId).getResultList();
+    }
 
 }
